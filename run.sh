@@ -73,7 +73,7 @@ echo "    - Enable and start the Nginx service"
 echo "    - Create a custom index.html page"
 echo ""
 
-cat > "$LAB_DIR/user-data" <<'USERDATA'
+cat > "$LAB_DIR/user-data" <<USERDATA
 #cloud-config
 hostname: nginx-lab
 users:
@@ -82,6 +82,8 @@ users:
     lock_passwd: false
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
+    ssh_authorized_keys:
+      - "${QLAB_SSH_PUB_KEY:-}"
 ssh_pwauth: true
 packages:
   - nginx
