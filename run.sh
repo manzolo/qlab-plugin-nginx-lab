@@ -73,7 +73,7 @@ echo "    - Enable and start the Nginx service"
 echo "    - Create a custom index.html page"
 echo ""
 
-cat > "$LAB_DIR/user-data" <<USERDATA
+cat > "$LAB_DIR/user-data" <<'USERDATA'
 #cloud-config
 hostname: nginx-lab
 users:
@@ -83,17 +83,50 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh_authorized_keys:
-      - "${QLAB_SSH_PUB_KEY:-}"
+      - "__QLAB_SSH_PUB_KEY__"
 ssh_pwauth: true
 packages:
   - nginx
-  - curl
+write_files:
+  - path: /etc/motd.raw
+    content: |
+      \033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m
+        \033[1;32mnginx-lab\033[0m — \033[1mWeb Server Lab with Nginx\033[0m
+      \033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m
+
+        \033[1;33mObjectives:\033[0m
+          • verify the Nginx service status
+          • modify the default welcome page
+          • test connectivity from the host
+
+        \033[1;33mWeb Service Info:\033[0m
+          \033[0;32msystemctl status nginx\033[0m    service status
+          \033[0;32mcurl localhost\033[0m            test the website
+          \033[0;32m/var/www/html/index.html\033[0m  web root path
+          \033[0;32m/etc/nginx/nginx.conf\033[0m     main config file
+
+        \033[1;33mNginx Logs:\033[0m
+          \033[0;32m/var/log/nginx/access.log\033[0m
+          \033[0;32m/var/log/nginx/error.log\033[0m
+
+        \033[1;33mCredentials:\033[0m  \033[1;36mlabuser\033[0m / \033[1;36mlabpass\033[0m
+        \033[1;33mExit:\033[0m         type '\033[1;31mexit\033[0m'
+
+      \033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m
+
+
 runcmd:
-  - systemctl enable nginx
-  - systemctl start nginx
-  - echo "<h1>nginx-lab is running!</h1><p>Served from a QEMU VM provisioned with cloud-init.</p>" > /var/www/html/index.html
+  - chmod -x /etc/update-motd.d/*
+  - sed -i 's/^#\?PrintMotd.*/PrintMotd yes/' /etc/ssh/sshd_config
+  - sed -i 's/^session.*pam_motd.*/# &/' /etc/pam.d/sshd
+  - printf '%b' "$(cat /etc/motd.raw)" > /etc/motd
+  - rm -f /etc/motd.raw
+  - systemctl restart sshd
   - echo "=== nginx-lab VM is ready! ==="
 USERDATA
+
+# Inject the SSH public key into user-data
+sed -i "s|__QLAB_SSH_PUB_KEY__|${QLAB_SSH_PUB_KEY:-}|g" "$LAB_DIR/user-data"
 
 cat > "$LAB_DIR/meta-data" <<METADATA
 instance-id: ${PLUGIN_NAME}-001
