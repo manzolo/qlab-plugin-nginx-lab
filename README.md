@@ -1,6 +1,10 @@
-# nginx-lab
+# nginx-lab — Nginx Web Server Lab
 
-A QEMU/KVM lab that boots a virtual machine with Nginx installed and configured as a web server.
+[![QLab Plugin](https://img.shields.io/badge/QLab-Plugin-blue)](https://github.com/manzolo/qlab)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)](https://github.com/manzolo/qlab)
+
+A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine with Nginx installed and configured as a web server.
 
 ## Objectives
 
