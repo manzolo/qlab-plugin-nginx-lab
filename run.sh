@@ -197,6 +197,12 @@ echo ""
 start_vm "$OVERLAY_DISK" "$CIDATA_ISO" "$MEMORY" "$PLUGIN_NAME" auto \
     "hostfwd=tcp::0-:80"
 
+# Read the dynamically allocated HTTP port from .ports file
+HTTP_PORT=""
+if [[ -f "$STATE_DIR/${PLUGIN_NAME}.ports" ]]; then
+    HTTP_PORT=$(grep ':80$' "$STATE_DIR/${PLUGIN_NAME}.ports" | head -1 | cut -d: -f2)
+fi
+
 echo ""
 echo "============================================="
 echo "  nginx-lab: VM is booting"
@@ -210,7 +216,11 @@ echo "  Connect via SSH (wait ~60s for boot + package install):"
 echo "    qlab shell ${PLUGIN_NAME}"
 echo ""
 echo "  Test Nginx (after boot completes):"
+if [[ -n "$HTTP_PORT" ]]; then
+echo "    curl http://localhost:${HTTP_PORT}"
+else
 echo "    Check the HTTP port with: qlab ports"
+fi
 echo ""
 echo "  View boot log:"
 echo "    qlab log ${PLUGIN_NAME}"
