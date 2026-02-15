@@ -30,8 +30,10 @@ A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine wi
 
 | Service | Host Port | VM Port |
 |---------|-----------|---------|
-| SSH     | 2223      | 22      |
-| HTTP    | 8080      | 80      |
+| SSH     | dynamic   | 22      |
+| HTTP    | dynamic   | 80      |
+
+> All host ports are dynamically allocated. Use `qlab ports` to see the actual mappings.
 
 ## Usage
 
@@ -44,8 +46,8 @@ qlab run nginx-lab
 
 # Wait ~60s for boot and package installation, then:
 
-# Test the web server
-curl http://localhost:8080
+# Test the web server (check the HTTP port with 'qlab ports')
+curl http://localhost:<port>
 
 # Connect via SSH
 qlab shell nginx-lab
