@@ -4,8 +4,6 @@
 set -euo pipefail
 
 PLUGIN_NAME="nginx-lab"
-SSH_PORT=2223
-HTTP_PORT=8080
 
 echo "============================================="
 echo "  nginx-lab: Nginx Web Server Lab"
@@ -192,12 +190,12 @@ info "Step 5: Starting VM in background"
 echo ""
 echo "  The VM will run in background with:"
 echo "    - Serial output logged to .qlab/logs/$PLUGIN_NAME.log"
-echo "    - SSH access on port $SSH_PORT"
-echo "    - HTTP access on port $HTTP_PORT (forwarded to VM port 80)"
+echo "    - SSH access on a dynamically allocated port"
+echo "    - HTTP access on a dynamically allocated port (forwarded to VM port 80)"
 echo ""
 
-start_vm "$OVERLAY_DISK" "$CIDATA_ISO" "$MEMORY" "$PLUGIN_NAME" "$SSH_PORT" \
-    "hostfwd=tcp::${HTTP_PORT}-:80"
+start_vm "$OVERLAY_DISK" "$CIDATA_ISO" "$MEMORY" "$PLUGIN_NAME" auto \
+    "hostfwd=tcp::0-:80"
 
 echo ""
 echo "============================================="
@@ -212,7 +210,7 @@ echo "  Connect via SSH (wait ~60s for boot + package install):"
 echo "    qlab shell ${PLUGIN_NAME}"
 echo ""
 echo "  Test Nginx (after boot completes):"
-echo "    curl http://localhost:${HTTP_PORT}"
+echo "    Check the HTTP port with: qlab ports"
 echo ""
 echo "  View boot log:"
 echo "    qlab log ${PLUGIN_NAME}"
