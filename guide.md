@@ -355,8 +355,10 @@ A reverse proxy sits between clients and backend servers. Clients talk to Nginx,
 ```bash
 mkdir -p /tmp/backend
 echo '{"status": "ok", "message": "Hello from backend on port 8080"}' > /tmp/backend/index.html
-cd /tmp/backend && python3 -m http.server 8080 &
+sudo systemd-run --quiet --unit=test-backend python3 -m http.server 8080 --directory /tmp/backend
 ```
+
+Using `systemd-run` instead of `&` ensures the process runs reliably in the background as a systemd transient unit, which is especially important when running commands over SSH.
 
 ### 5.2 Verify the backend works directly
 
@@ -415,7 +417,7 @@ The response comes from the backend on port 8080, but you accessed it via Nginx 
 ### 5.6 Clean up
 
 ```bash
-kill %1 2>/dev/null  # stop the Python server
+sudo systemctl stop test-backend  # stop the Python server
 sudo rm /etc/nginx/sites-enabled/proxy.conf
 sudo systemctl reload nginx
 ```
