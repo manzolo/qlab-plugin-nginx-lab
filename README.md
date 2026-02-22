@@ -63,10 +63,27 @@ qlab stop nginx-lab
 
 ## Exercises
 
-1. **Verify Nginx is running**: SSH into the VM and check `systemctl status nginx`
-2. **Modify the web page**: Edit `/var/www/html/index.html` and refresh from the host
-3. **Check access logs**: Run `tail -f /var/log/nginx/access.log` inside the VM, then curl from the host
-4. **Create a virtual host**: Configure a new site in `/etc/nginx/sites-available/`
+> **New to Nginx?** See the [Step-by-Step Guide](guide.md) for complete walkthroughs with full config examples.
+
+| # | Exercise | What you'll do |
+|---|----------|----------------|
+| 1 | **Nginx Anatomy** | Explore Nginx installation, config files, and running processes |
+| 2 | **Serving Content** | Modify the default page and serve custom HTML |
+| 3 | **Virtual Hosts** | Configure multiple sites with server blocks |
+| 4 | **Logs and Monitoring** | Analyze access/error logs and monitor traffic |
+| 5 | **Reverse Proxy** | Set up Nginx as a reverse proxy |
+| 6 | **Security Basics** | Configure rate limiting and access restrictions |
+
+## Automated Tests
+
+An automated test suite validates the exercises against a running VM:
+
+```bash
+# Start the lab first
+qlab run nginx-lab
+# Wait ~60s for cloud-init, then run all tests
+qlab test nginx-lab
+```
 
 ## Resetting
 
