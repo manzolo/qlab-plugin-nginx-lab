@@ -1,0 +1,92 @@
+[INFO] Running tests for plugin 'nginx-lab'...
+
+
+=========================================
+  nginx-lab — Automated Test Suite
+=========================================
+
+  [INFO] Workspace: /home/manzolo/Workspaces/qemu/qlab/qlab
+  [INFO] Server port: 2225
+  [INFO] HTTP port: 2226
+  [INFO] Checking VM connectivity...
+  [PASS] VM is reachable via SSH
+  [INFO] Checking cloud-init status...
+  [PASS] Cloud-init is done
+  [INFO] Cleaning up nginx test artifacts...
+
+Exercise 1 — Nginx Anatomy
+
+  [PASS] Nginx service is active
+  [PASS] nginx.conf exists
+  [PASS] sites-available exists
+  [PASS] sites-enabled exists
+  [PASS] Config has worker_processes
+  [PASS] Config includes sites-enabled
+  [PASS] Default site exists in sites-available
+  [PASS] Default site is enabled (symlink in sites-enabled)
+  [PASS] Default page returns content
+
+  Exercise 1: All 9 checks passed
+
+Exercise 2 — Serving Content
+
+  [PASS] Default page returns HTTP content
+  [PASS] Document root /var/www/html exists
+  [PASS] Modified page is served immediately
+  [PASS] Subdirectory content is served
+  [PASS] Existing page returns 200
+  [PASS] Missing page returns 404
+
+  Exercise 2: All 6 checks passed
+
+Exercise 3 — Virtual Hosts
+
+  [PASS] Config validation passes
+  [PASS] Nginx reload succeeds
+  [PASS] Virtual host serves correct content
+  [PASS] Default site still responds
+
+  Exercise 3: All 4 checks passed
+
+Exercise 4 — Logs and Monitoring
+
+  [PASS] Access log file exists
+  [PASS] Error log file exists
+  [PASS] Access log records requests
+  [PASS] 404 requests are logged
+  [PASS] nginx -t validates successfully
+  [PASS] Master process is running
+  [PASS] Worker process is running
+
+  Exercise 4: All 7 checks passed
+
+Exercise 5 — Reverse Proxy
+
+  [PASS] Backend server responds on port 8080
+  [PASS] Proxy config validates
+  [PASS] Nginx reload with proxy config
+  [PASS] Proxy returns backend response
+
+  Exercise 5: All 4 checks passed
+
+Exercise 6 — Security Basics
+
+  [PASS] htpasswd is available
+  [PASS] Password file created
+  [PASS] Unauthenticated request returns 401
+  [PASS] Correct credentials return 200
+  [PASS] Authenticated request returns protected content
+  [PASS] Wrong credentials return 401
+
+  Exercise 6: All 6 checks passed
+
+=========================================
+  Final Report
+=========================================
+
+  Exercises run:     6
+  Exercises passed:  6
+  Exercises failed:  0
+  Exercises skipped: 0
+
+  All exercises passed!

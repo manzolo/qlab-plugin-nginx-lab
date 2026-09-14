@@ -35,6 +35,22 @@ A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine wi
 
 > All host ports are dynamically allocated. Use `qlab ports` to see the actual mappings.
 
+## Walkthrough
+
+`docs/` holds an illustrated account of a real run — every block of output in it
+was captured while the lab was running, not written by hand.
+
+| English | Italiano |
+|---|---|
+| [`docs/walkthrough-en.pdf`](docs/walkthrough-en.pdf) | [`docs/walkthrough-it.pdf`](docs/walkthrough-it.pdf) |
+
+```bash
+# from the qlab checkout
+python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab        # English
+python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab -it    # Italian
+python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab --live # re-capture first
+```
+
 ## Usage
 
 ```bash

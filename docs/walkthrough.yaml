@@ -1,0 +1,40 @@
+# nginx-lab — what the walkthrough builder captures from a running lab.
+#
+# The test suite is captured FIRST, on purpose: it exercises the lab, and the
+# request captured afterwards shows the consequence. The exercises clean up the
+# virtual host they build, which is why a request for an unknown Host lands on
+# the default_server rather than on a site of its own.
+
+evidence:
+  - id: qlab-test
+    cmd: qlab test nginx-lab 2>&1 || true
+
+  - id: version
+    vm: nginx-lab
+    cmd: 'nginx -v 2>&1; systemctl is-active nginx; systemctl is-enabled nginx'
+  - id: processes
+    vm: nginx-lab
+    cmd: ps -o user,pid,ppid,cmd --no-headers -C nginx
+  - id: listening
+    vm: nginx-lab
+    cmd: sudo ss -tlnp 2>/dev/null | grep -E 'nginx|LISTEN' | head -8
+  - id: sites
+    vm: nginx-lab
+    cmd: 'ls -l /etc/nginx/sites-enabled/; echo; ls /etc/nginx/sites-available/'
+  - id: default-site
+    vm: nginx-lab
+    cmd: grep -vE '^\s*#|^\s*$' /etc/nginx/sites-available/default
+  - id: configtest
+    vm: nginx-lab
+    cmd: sudo nginx -t 2>&1
+  - id: request
+    vm: nginx-lab
+    cmd: |
+      echo '$ curl -I http://localhost/'
+      curl -sI http://localhost/ | head -6
+      echo
+      echo '$ curl -H "Host: mysite.local" http://localhost/'
+      curl -s -H 'Host: mysite.local' http://localhost/ 2>/dev/null | head -3
+  - id: logs
+    vm: nginx-lab
+    cmd: sudo tail -6 /var/log/nginx/access.log

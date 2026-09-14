@@ -1,0 +1,2 @@
+root        1605       1 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+www-data    2230    1605 nginx: worker process
