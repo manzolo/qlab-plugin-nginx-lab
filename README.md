@@ -2,116 +2,44 @@
 
 [![QLab Plugin](https://img.shields.io/badge/QLab-Plugin-blue)](https://github.com/manzolo/qlab)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)](https://github.com/manzolo/qlab)
+[![Walkthrough](https://img.shields.io/badge/walkthrough-EN%20%26%20IT-informational)](docs/walkthrough-en.pdf)
 
-A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine with Nginx installed and configured as a web server.
+A single-VM [QLab](https://github.com/manzolo/qlab) lab with Nginx preinstalled and its
+port forwarded to the host — for learning how a web server serves content, virtual hosts,
+logs, reverse proxying and a few security basics, by configuring them yourself.
 
-## Objectives
-
-- Learn how to provision packages via cloud-init
-- Understand how Nginx serves web content
-- Practice port forwarding to access services inside a VM
-- Test HTTP responses using curl from the host
-
-## How It Works
-
-1. **Cloud image**: Downloads a minimal Ubuntu 22.04 cloud image (~250MB)
-2. **Cloud-init**: Creates `user-data` with Nginx package installation and custom index page
-3. **ISO generation**: Packs cloud-init files into a small ISO (cidata)
-4. **Overlay disk**: Creates a COW disk on top of the base image (original stays untouched)
-5. **QEMU boot**: Starts the VM in background with SSH and HTTP port forwarding
-
-## Credentials
-
-- **Username:** `labuser`
-- **Password:** `labpass`
-
-## Ports
-
-| Service | Host Port | VM Port |
-|---------|-----------|---------|
-| SSH     | dynamic   | 22      |
-| HTTP    | dynamic   | 80      |
-
-> All host ports are dynamically allocated. Use `qlab ports` to see the actual mappings.
-
-## Walkthrough
-
-`docs/` holds an illustrated account of a real run — every block of output in it
-was captured while the lab was running, not written by hand.
-
-| English | Italiano |
-|---|---|
-| [`docs/walkthrough-en.pdf`](docs/walkthrough-en.pdf) | [`docs/walkthrough-it.pdf`](docs/walkthrough-it.pdf) |
+## Quick start
 
 ```bash
-# from the qlab checkout
-python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab        # English
-python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab -it    # Italian
-python3 tools/walkthrough/build.py ../qlab-plugin-nginx-lab --live # re-capture first
-```
-
-## Usage
-
-```bash
-# Install the plugin
 qlab install nginx-lab
-
-# Run the lab
-qlab run nginx-lab
-
-# Wait ~60s for boot and package installation, then:
-
-# Test the web server (check the HTTP port with 'qlab ports')
-curl http://localhost:<port>
-
-# Connect via SSH
-qlab shell nginx-lab
-
-# Inside the VM, you can:
-#   - Edit /var/www/html/index.html
-#   - Check nginx status: systemctl status nginx
-#   - View nginx logs: tail -f /var/log/nginx/access.log
-
-# Stop the VM
+qlab run nginx-lab       # boots 1 VM (~60s)
+qlab shell nginx-lab     # log in: labuser / labpass
+qlab test nginx-lab      # run the automated checks
 qlab stop nginx-lab
 ```
 
-## Exercises
+Check the forwarded HTTP port with `qlab ports`, then `curl http://127.0.0.1:<port>/`.
 
-> **New to Nginx?** See the [Step-by-Step Guide](guide.md) for complete walkthroughs with full config examples.
+## What's inside
 
-| # | Exercise | What you'll do |
-|---|----------|----------------|
-| 1 | **Nginx Anatomy** | Explore Nginx installation, config files, and running processes |
-| 2 | **Serving Content** | Modify the default page and serve custom HTML |
-| 3 | **Virtual Hosts** | Configure multiple sites with server blocks |
-| 4 | **Logs and Monitoring** | Analyze access/error logs and monitor traffic |
-| 5 | **Reverse Proxy** | Set up Nginx as a reverse proxy |
-| 6 | **Security Basics** | Configure rate limiting and access restrictions |
+| # | Exercise | What you do |
+|---|----------|-------------|
+| 1 | Nginx anatomy | installation, config files, running processes |
+| 2 | Serving content | edit the default page, serve custom HTML |
+| 3 | Virtual hosts | multiple sites with server blocks |
+| 4 | Logs & monitoring | read access/error logs, watch traffic |
+| 5 | Reverse proxy | put Nginx in front of a backend |
+| 6 | Security basics | rate limiting and access restrictions |
 
-## Automated Tests
+## Access
 
-An automated test suite validates the exercises against a running VM:
+| | |
+|---|---|
+| **SSH** | `labuser` / `labpass` |
+| **Ports** | SSH + HTTP (80), dynamically allocated — see `qlab ports` |
 
-```bash
-# Start the lab first
-qlab run nginx-lab
-# Wait ~60s for cloud-init, then run all tests
-qlab test nginx-lab
-```
+## Learn more
 
-## Resetting
-
-To start fresh, stop and re-run:
-
-```bash
-qlab stop nginx-lab
-qlab run nginx-lab
-```
-
-Or reset the entire workspace:
-
-```bash
-qlab reset
-```
+- 📖 **[Step-by-step guide](guide.md)** — every exercise with full config examples
+- 📄 **Illustrated walkthrough** — a real run, captured live: **[English](docs/walkthrough-en.pdf)** · **[Italiano](docs/walkthrough-it.pdf)**
+- 🧩 **[QLab](https://github.com/manzolo/qlab)** — the plugin runner: how install, overlays and cloud-init work
